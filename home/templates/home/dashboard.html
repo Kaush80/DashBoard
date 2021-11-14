@@ -1,0 +1,266 @@
+{% extends "home/base.html" %}
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm" id="container" style="min-width: 310px; height: 400px; max-width: 550px; margin: 0 ">
+    </div>
+    <div class="col-sm" id="container2" style="min-width: 310px; height: 400px; max-width: 550px; margin: 0 auto">
+    </div>
+  </div>
+</div>
+<div class="col-sm mt-2" id="container3" style="min-width: 310px; height: 400px; max-width: 1100px; margin: 5 "></div>
+<div class="container">
+  <div class="row">
+<div class="col-sm mt-2" id="container4" style="min-width: 310px; height: 250px; max-width: 600px; margin: 5 "></div>
+<div class="col-sm mt-2" id="container5" style="min-width: 310px; height: 500px; max-width: 500px; margin: 5 "></div>
+</div>
+</div>
+
+<script>
+	_categories = {{categories|safe}};
+	_values = {{values|safe}};
+	var _data = [];
+	_categories.forEach(function(entry,i) {
+    	var singleObj = {}
+    	singleObj['name'] = entry;
+    	singleObj['y'] = _values[i];
+    	_data.push(singleObj);
+    
+});
+
+Highcharts.chart('container', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'City distribution'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        name: 'City',
+        colorByPoint: true,
+        data: _data,
+    }]
+});
+_ls={{ls|safe}}
+console.log(_ls);
+
+Highcharts.chart('container2', {
+    chart: {
+        type: 'scatter',
+        zoomType: 'xy'
+    },
+    accessibility: {
+        description: 'Scatter  plot showing the id and country code variation'
+    },
+    title: {
+        text: 'Id vs Country Code'
+    },
+    subtitle: {
+        text: ''
+    },
+    xAxis: {
+        title: {
+            enabled: true,
+            text: 'Country Code'
+        },
+        startOnTick: true,
+        endOnTick: true,
+        showLastLabel: true
+    },
+    yAxis: {
+        title: {
+            text: 'ID'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        verticalAlign: 'top',
+        x: 100,
+        y: 70,
+        floating: true,
+        backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
+        borderWidth: 1
+    },
+    plotOptions: {
+        scatter: {
+            marker: {
+                radius: 5,
+                states: {
+                    hover: {
+                        enabled: true,
+                        lineColor: 'rgb(100,100,100)'
+                    }
+                }
+            },
+            states: {
+                hover: {
+                    marker: {
+                        enabled: false
+                    }
+                }
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x}, {point.y} ID'
+            }
+        }
+    },
+    series: [{
+        name: 'Person',
+        color: 'rgba(223, 83, 83, .5)',
+        data: _ls
+
+        }]
+ });
+Highcharts.chart('container3', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'Customer'
+    },
+    subtitle: {
+        text: ''
+    },
+    xAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    yAxis: {
+        title: {
+            text: 'Traffic from city'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'NY',
+        data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+    }, {
+        name: 'London',
+        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+    }]
+});
+
+Highcharts.chart('container4', {
+    chart: {
+        type: 'area'
+    },
+    title: {
+        text: ' Estimated Worldwide User Growth by Region'
+    },
+    subtitle: {
+        text: ''
+    },
+    xAxis: {
+        categories: ['5/18', '8/18', '11/18', '2/19', '5/19'],
+        tickmarkPlacement: 'on',
+        title: {
+            enabled: false
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Hundred'
+        },
+        labels: {
+            formatter: function () {
+                return this.value / 1000;
+            }
+        }
+    },
+    tooltip: {
+        split: true,
+        valueSuffix: ''
+    },
+    plotOptions: {
+        area: {
+            stacking: 'normal',
+            lineColor: '#666666',
+            lineWidth: 1,
+            marker: {
+                lineWidth: 1,
+                lineColor: '#666666'
+            }
+        }
+    },
+    series: [{
+        name: 'Asia',
+        data: [12, 18, 29, 45, 650]
+    }, {
+        name: 'Europre',
+        data: [10, 12, 16, 18, 26]
+    }, {
+        name: 'America',
+        data: [3, 6, 8, 15, ]
+    }]
+});
+Highcharts.chart('container5', {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Stacked bar chart'
+    },
+    xAxis: {
+        categories: ['demo', 'demo', 'demo', 'demo', 'demo']
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Demo'
+        }
+    },
+    legend: {
+        reversed: true
+    },
+    plotOptions: {
+        series: {
+            stacking: 'normal'
+        }
+    },
+    series: [{
+        name: 'xyz',
+        data: [5, 3, 4, 7, 2]
+    }, {
+        name: 'abc',
+        data: [2, 2, 3, 2, 1]
+    }, {
+        name: 'pqr',
+        data: [3, 4, 4, 2, 5]
+    }]
+});
+
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+{% endblock content %}
